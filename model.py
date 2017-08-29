@@ -10,8 +10,11 @@ class Model(object):
     def predict(self, inp):
         out = np.expand_dims(inp.flatten(), 0)
         out = out / np.linalg.norm(out)
+        #print ("Out %s" % (out))
         for layer in self.weights:
             out = np.dot(out, layer)
+            #print ("Out dot %s" % (out))
+        #print ("Out zero: %s" % (out[0]))
         return out[0]
 
     def get_weights(self):
