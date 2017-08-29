@@ -172,7 +172,7 @@ class Agent:
                     action = self.get_predicted_action(sequence)
                     #print ("Action predicted %s" % (action))
                 #print ("Action: %s" % (action))
-                observation, reward, done, _ = self.env.step(action)
+                observation, reward, done, _ = self.env.step([-0.00573673,  0.00121508,  0.01270417,  0.01607033])
                 total_reward += reward
                 sequence = sequence[1:]
                 sequence.append(observation)
@@ -181,5 +181,5 @@ class Agent:
         return total_reward/self.EPS_AVG
 
 agent = Agent()
-agent.train(200)
-#agent.play(10, render=True)
+agent.train(20)
+agent.play(10, render=True)
