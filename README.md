@@ -25,4 +25,4 @@ Looking at other solutions seems to be the best way to go. Reading the mathemati
 
 My code is finally doing something interesting. Marvin is walking about as good a dog standing, actually that may be too much credit. I now just need to figure out how to keep him learning as he goes and make beter decisions rather than just grab random data from the time.
 
-![First Steps GIF](http://www.giphy.com/gifs/3o7aD5GTkoAoPvz3uU)
+![First Steps GIF](https://media.giphy.com/media/3o7aD5GTkoAoPvz3uU/giphy.gif)
