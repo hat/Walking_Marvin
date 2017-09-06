@@ -4,12 +4,16 @@
 
 ##############################
 
+# PROBLEMS: Might have to many nested objects
+
 import gym
 import time
 import numpy as np
 
 class Marvin:
 	LEARNING_RATE = 0.01
+	npop = 40
+	sigma = 0.3
 
 	def __init__(self):
 		self.env = gym.make('Marvin-v0')
@@ -23,49 +27,44 @@ class Marvin:
 
 			return action
 
-	def start(self, episodes, render=False):
-		for i in range(episodes):
-			state = self.env.reset()
-			total_reward = 0
-			for j in range(10000):
-				if render:
-					self.env.render()
-				action = self.get_action(state)
-				state, reward, done, info = self.env.step(action)
-				total_reward += reward
+	def start(self, render=False):
+		state = self.env.reset()
+		total_reward = 0
+		for j in range(10000):
+			if render:
+				self.env.render()
+			action = self.get_action(state)
+			state, reward, done, info = self.env.step(action)
+			total_reward += reward
 
-				print ("State: %s Reward: %s Done %s Info %s" % (state, reward, done, info))
+			print ("State: %s Reward: %s Done %s Info %s" % (state, reward, done, info))
 
-				if done:
-					break
+			if done:
+				print ("Reward: %s" % (reward))
+				break
 		return total_reward
 
+	def train(self, sims=10000):
+		for i in range(sims):
+			model_n = {}
+			for r, c in self.model.matrix.iteritems():
+				model_n[r] = np.random.randn(Marvin.npop, c.shape[0], c.shape[1])
+			R = np.zeros(Marvin.npop)
 
-	def play(self, episodes, render=False):
-		for i_episode in range(episodes):
-			observation = self.env.reset()
-			while True:
-				# Starts the process
-				#print (observation)
+			for j in range(Marvin.npop):
+				test_model = {}
+				for r, c in self.model.matrix.iteritems():
+					print ("R is: %s" % (r))
+					test_model[r] = c + Marvin.sigma * model_n[r][j]
+				R[j] = Marvin.start(self)
 
-				# Gets random action
-				action = self.env.action_space.sample()
+			A = (R - np.mean(R)) / np.std(R)
 
-				print (self.env.observation_space[0])
+			for i in self.model.matrix:
+				self.model.matrix[i] = self.model.matrix[i] + alpha / (Marvin.npop * Marvin.sigma) * np.dot(model_n[i].transpose(1, 2, 0), A)
 
-				# Starts action
-				observation, reward, done, info = self.env.step(self.env.observation_space.low)
-
-				print ("Reward is %s" % (reward))
-
-				# Renders to screen
-				if render:
-					self.env.render()
-
-				# Checks if still alive if not starts next episode
-				if done:
-					print("Episode finished")
-					break
+			cur_reward = start(self)
+			aver_reward = aver_reward * 0.9 + cur_reward * 0.1 if aver_reward != None else cur_reward
 
 class Model:
 
@@ -81,5 +80,6 @@ class Model:
 		self.matrix['W2'] = np.random.randn(hl_size, 4) / np.sqrt(hl_size)
 
 marvin = Marvin()
-marvin.start(1000, render=True)
+#marvin.start(render=True)
+marvin.train()
 #marvin.play(10, render=True)

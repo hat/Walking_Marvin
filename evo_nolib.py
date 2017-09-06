@@ -83,6 +83,7 @@ for i in range(10001):
 	for j in range(npop):
 		model_try = {}
 		for k, v in model.iteritems():
+			print ("K is: %s" % (k))
 			model_try[k] = v + sigma*N[k][j]
 		R[j] = f(model_try)
 
