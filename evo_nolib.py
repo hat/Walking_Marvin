@@ -18,7 +18,7 @@ env = gym.make('Marvin-v0')
 np.random.seed(10)
 
 hl_size = 100
-version = 1
+version = 2
 npop = 40
 sigma = 0.2
 alpha = 0.06
