@@ -1,18 +1,13 @@
-##############################
-
-	#My Current Try
-
-##############################
-
-# PROBLEMS: Might have to many nested objects
+#!/usr/bin/env python2.7
 
 import gym
 import time
 import numpy as np
 import cPickle as pickle
+from flags import MarvinFlags
 
 class Marvin:
-	LOAD_FILE = True
+	LOAD_FILE = False
 	#LEARNING_R
 	ATE = 0.01
 	version = 1
@@ -22,10 +17,10 @@ class Marvin:
 	aver_reward = None
 
 
-	def __init__(self):
+	def __init__(self, flags):
 		self.env = gym.make('Marvin-v0')
-		if self.LOAD_FILE:
-			self.model = pickle.load(open('model-pedal%d.p' % self.version, 'rb'))
+		if flags.load:
+			self.model = pickle.load(open(flags.load, 'rb'))
 		else:
 			hl_size = 100
 			t = int( time.time() * 1000.0 )
@@ -36,6 +31,8 @@ class Marvin:
 			self.model = {}
 			self.model['W1'] = np.random.randn(24, hl_size) / np.sqrt(24)
 			self.model['W2'] = np.random.randn(hl_size, 4) / np.sqrt(hl_size)
+			# print(self.model['W1'])
+			# print(self.model['W2'])
 
 	def get_action(self, state, model):
 			hl = np.matmul(state, model['W1'])
@@ -79,7 +76,7 @@ class Marvin:
 				break
 		return total_reward
 
-	def train(self, sims=10000):
+	def train(self, flags, sims=10000):
 		for i in range(sims):
 			model_n = {}
 			for r, c in self.model.iteritems():
@@ -101,7 +98,8 @@ class Marvin:
 			cur_reward = Marvin.test_train(self, self.model)
 			self.aver_reward = self.aver_reward * 0.9 + cur_reward * 0.1 if self.aver_reward != None else cur_reward
 			print ("Current reward: %s Average reward: %s" % (cur_reward, self.aver_reward))
-			pickle.dump(self.model, open('model-pedal%d.p' % self.version, 'wb'))
+			if flags.save:
+				pickle.dump(self.model, open(flags.save, 'wb'))
 
 # class Model:
 
@@ -116,7 +114,13 @@ class Marvin:
 # 		self.matrix['W1'] = np.random.randn(24, hl_size) / np.sqrt(24)
 # 		self.matrix['W2'] = np.random.randn(hl_size, 4) / np.sqrt(hl_size)
 
-marvin = Marvin()
-#marvin.train()
-marvin.start(render=True)
-#marvin.play(10, render=True)
+# Main entry point of the program
+if __name__ == "__main__":
+	flags = MarvinFlags()
+	marvin = Marvin(flags)
+	if flags.walk:
+		marvin.start(render=True)
+	else:
+		marvin.train(flags)
+		marvin.start(render=True)
+# End of program
