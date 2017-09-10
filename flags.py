@@ -34,6 +34,31 @@ def parser():
         help='save weights to a file after running the program',
         required=False)
 
+    parser.add_argument(
+        '-i',
+        '--info',
+        action='store_true',
+        help='display logs',
+        required=False)
+
+    parser.add_argument(
+        '-a',
+        '--actions',
+        type=int,
+        default=10000,
+        metavar='iterations',
+        help='determine max number of actions',
+        required=False)
+
+    parser.add_argument(
+        '-p',
+        '--plays',
+        type=int,
+        default=1,
+        metavar='games',
+        help='determine number of walkthroughs',
+        required=False)
+
     return parser.parse_args()
 
 class MarvinFlags(object):
@@ -43,4 +68,7 @@ class MarvinFlags(object):
         self.walk = self.flags.walk
         self.load = self.flags.load
         self.save = self.flags.save
+        self.info = self.flags.info
+        self.actions = self.flags.actions
+        self.plays = self.flags.plays
         return None
