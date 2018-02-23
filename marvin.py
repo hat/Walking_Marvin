@@ -14,7 +14,8 @@ __status__ = "Production"
 import gym
 import time
 import numpy as np
-import cPickle as pickle
+#import cPickle as pickle
+import pickle
 from flags import MarvinFlags
 
 # Start of class of defintion
@@ -110,7 +111,7 @@ class Marvin:
 			cur_reward = Marvin.test_train(self, self.model)
 			self.aver_reward = self.aver_reward * 0.9 + cur_reward * 0.1 if self.aver_reward != None else cur_reward
 			print ("Current reward: %s Average reward: %s" % (cur_reward, self.aver_reward))
-			if flags.save and cur_reward > best_reward:
+			if flags.save and cur_reward > self.best_reward:
 				best_reward = cur_reward
 				pickle.dump(self.model, open(flags.save, 'wb'))
 # End of class definiton
